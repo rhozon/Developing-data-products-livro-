@@ -1,0 +1,1386 @@
+\documentclass{article}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[utf8]{inputenc}
+\usepackage{lscape}
+\usepackage[colorlinks = true,
+            linkcolor = blue,
+            urlcolor  = blue,
+            citecolor = blue,
+            anchorcolor = blue]{hyperref}
+\usepackage{amsmath}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+\usepackage{tikz}
+\newcommand{\roundpic}[4][]{
+  \tikz\node [circle, minimum width = #2,
+    path picture = {
+      \node [#1] at (path picture bounding box.center) {
+        \includegraphics[width=#3]{#4}};
+    }] {};}
+    
+\usepackage{indentfirst}
+\usepackage[a4paper,margin={1.2in,1.5in},vmargin={1.2in,1.5in}]{geometry}
+\geometry{paperwidth=210mm,paperheight=297mm,
+textwidth=150mm,textheight=210mm,
+top=23mm,bottom=23mm,
+left=23mm,right=23mm}
+\usepackage[colorlinks,linkcolor=blue,hyperindex]{hyperref}
+\usepackage[brazil]{babel}
+\usepackage{graphicx,color,wrapfig}
+\usepackage{multicol}
+%\usetikzlibrary{mindmap}
+%\pagestyle{empty}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[]{}
+\rhead{\textit{Desenvolvimento de \textit{data products}}}
+\lhead{\thepage}
+\fancyfoot[]{}
+\renewcommand{\headrulewidth}{0.1pt}
+\usepackage{color,soul}
+\usepackage{color}
+\usepackage{listings}%pacote para literalizar os códigos do R no Latex
+\usepackage{xcolor}
+
+\usepackage[dvipsnames]{xcolor}
+
+\definecolor{mygray}{gray}{0.9}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{mygray},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+%=========fim da instrução do listings
+\usepackage{xcolor}
+\usepackage[fixed]{fontawesome5}
+\usepackage{tcolorbox}
+\usepackage{comment}
+
+\usepackage[framemethod=TikZ]{mdframed}
+\mdfdefinestyle{MyFrame}{%
+    linecolor=blue,
+    outerlinewidth=1pt,
+    roundcorner=40pt,
+    innertopmargin=\baselineskip,
+    innerbottommargin=\baselineskip,
+    innerrightmargin=10pt,
+    innerleftmargin=10pt,
+    backgroundcolor=gray!50!white}
+    
+\usepackage{setspace}
+
+%============================================================
+%========================================================
+\begin{document}
+
+
+%============================================================
+
+\title{Desenvolvimento de \textit{Data Products} \\ \textit{Brian Caffo e Sean Kross}}
+\author{\href{https://rhozon.github.io/}{Traduzido por Rodrigo Hermont Ozon\footnote{Economista e Mestre em Desenvolvimento Econômico pela UFPR.}}}
+\date{Junho, 2020}
+
+\maketitle
+
+
+
+\thispagestyle{empty}
+%===========================================================
+\newpage
+
+\begin{mdframed}[style=MyFrame]
+
+\fbox{%
+\roundpic[xshift=-.00000095cm,yshift=-.0006cm]{3.8cm}{3cm}{me.jpg}%
+}
+
+
+\section*{Sobre o autor desta tradução:}
+
+
+\textit{Rodrigo Hermont Ozon, economista e apaixonado por econometria, pelas aplicações de modelos econômicos a problemas reais e cotidianos vivenciados na sociedade e na realidade do mundo empresarial e corporativo.}
+
+
+\begin{flushleft}
+Seus contatos podem ser acessados em:
+
+\begin{itemize}
+\item \href{https://rhozon.github.io/}{\faGithub} \href{https://rhozon.github.io/}{Github}
+
+\item \href{https://www.linkedin.com/in/rodrigohermontozon/}{\faLinkedin} \href{https://www.linkedin.com/in/rodrigohermontozon/}{Linkedin} %
+\end{itemize}
+\end{flushleft}
+
+
+\end{mdframed}
+
+\vspace{9cm}
+
+
+\begin{abstract}
+Esta tradução tem por finalidade contribuir com aqueles profissionais que trabalham com \textit{data science} e que precisam de alternativas mais robustas e sólidas para prestação de seus serviços, entregas e aplicações. Este curso ensina como criar ferramentas para melhorar o processo de análise de dados, tomar decisões orientadas por dados ou para outra infraestrutura que suporte outros produtos de dados.
+
+Este e-book foi escrito no \href{http://www.overleaf.com}{overleaf} com o pacote knitr para o e-book Developing Data Products disponível em \href{https://seankross.com/developing-data-products/}{seankross.com}.
+\end{abstract}
+
+
+\thispagestyle{empty}
+%==============================================================
+\newpage
+
+.
+
+\vspace{22cm}
+A minha amada família e ao Pedro e a Zoe, --  \textit{"Os filhos são herança do Senhor, uma recompensa que ele dá.."}
+
+\vspace{.15cm}
+\hspace{13cm}\href{https://www.bibliaon.com/versiculo/salmos_127_3-5/}{Salmo 127:3}
+
+\thispagestyle{empty}
+
+%==========================================================
+
+\newpage
+\tableofcontents
+\lstlistoflistings
+
+
+
+%\hspace{12cm}\includegraphics[widht=1.5cm,height=1.5cm]{erasmussign.png}
+\thispagestyle{headings}
+
+\newpage
+%====================================================
+\section*{Nota do tradutor}
+.
+
+\vspace{5cm}
+Esse e-book traduzido é oriundo de \fbox{\textit{\href{https://seankross.com/developing-data-products/}{\textit{Developing Data Products}}}} disponível como bookdown escrito pelos autores Brian Caffo e Sean Kross em 29/03/2017.
+
+\vspace{.25cm}
+\href{https://static1.squarespace.com/static/5757268f7da24f26ca7b21d2/t/5c7587114192021796d7cc84/1551206162093/R_Overleaf_Integration.pdf}{Para que os scripts funcionem corretamente recomendo que você faça a integração do seu \faRProject Studio com o Overleaf observando \fbox{esse tutorial aqui}.}
+
+\vspace{.25cm}
+\textit{*As traduções aqui são somente as transcrições. Não me preocupei em aperfeiçoá-las para a língua portuguesa com maior nível de clareza nos textos. As figuras e imagens não foram traduzidas.}
+
+\newpage
+
+\onehalfspacing%espaçamento 1,5 linhas
+\section*{Prefácio}
+\subsection{Sobre esse livro}
+
+Este livro foi escrito como um livro complementar para o curso Developing Data Products Coursera como parte da Especialização em Ciência de Dados. No entanto, se você não fizer a aula, o livro permanecerá por si próprio. Um componente útil do livro é uma série de vídeos do YouTube que compõem a classe Coursera.
+
+O livro pretende ser uma introdução de baixo custo ao importante campo de produtos de dados. O público-alvo são estudantes alfabetizados numérica e computacionalmente, que gostariam de usar essas habilidades em Ciência de Dados. O livro é oferecido gratuitamente como uma série de documentos R Markdown no Github e em formas mais convenientes (epub, mobi) no LeanPub.
+
+Este livro está licenciado sob uma Licença Internacional Creative Commons Atribuição-Uso Não-Comercial-Compartilhamento pela mesma licença 4.0, que requer atribuição de autor para trabalhos derivados, uso não comercial de trabalhos derivados e que as alterações são compartilhadas da mesma maneira que o trabalho original.
+
+\section*{Introdução}
+\subsection{O que é data product ?}
+
+Começaremos este livro definindo o tópico deste curso, de data products. Um produto de dados é a saída de produção de uma análise de dados. Por exemplo, uma análise de dados pode criar um algoritmo inteligente de aprendizado de máquina. Um produto de dados incorpora esse algoritmo em um site para que os usuários possam inserir valores e obter previsões. Sites de análise interativa, gráficos, aplicativos, pacotes \faRProject, apresentações e relatórios são todos produtos de dados. Neste livro, focamos apenas em alguns desses componentes. Principalmente por motivos de espaço, mas também porque nossa especialização no Coursera cobre outras (como redação de relatórios).
+
+Antes de iniciar este livro, você poderá usar \faRProject. Essa linguagem servirá como ponto de partida para todos os nossos produtos de dados. Felizmente, se você não conhece \faRProject, Roger Peng tem uma ótima \href{https://www.coursera.org/learn/r-programming}{aula de Coursera} e um \href{https://leanpub.com/rprogramming}{livro no LeanPub} sobre o assunto; pegue e leia primeiro. A aula acontece todos os meses e ambos podem ser obtidos gratuitamente.
+
+Por que \faRProject? Bem, para começar, é o que eu sei. Mas também é uma linguagem de análise de dados muito prevalente. Portanto, é conveniente criar o produto de dados na mesma linguagem em que a análise é feita. Além disso, a lista de ferramentas que você precisa aprender além do \faRProject para desenvolver produtos de dados é enorme e inclui: HTML, Javascript, D3, Python , Amazon Web Services e assim por diante. Em certo sentido, as ferramentas que apresentamos são melhor consideradas como ferramentas de prototipagem antes de criar um esforço maior de produção. No entanto, para muitos aplicativos, eles podem ficar sozinhos. O Shiny, em particular, está passando por rápida adoção, desenvolvimento e crescimento.
+
+\subsection{O objetivo deste livro}
+
+Este livro (e a classe correspondente) tem um objetivo simples: começar a criar produtos de dados, apresentando-lhe algumas ferramentas muito legais em \faRProject. Nós apenas arranhamos a superfície na maioria dessas plataformas fantásticas e, infelizmente, omitimos algumas importantes. É melhor seguir este livro com um projeto de dados simples em mente. Portanto, antes de começar, pense em um aplicativo Web orientado a dados que você deseja criar. Tente usar as ferramentas em andamento para criar versões simplificadas do seu aplicativo. Esperamos que, no final, você tenha um kit de ferramentas grande o suficiente para poder aprender o que precisa para criar seu aplicativo ou produto.
+
+\newpage
+
+\section{R Markdown}
+
+\href{https://seankross.com/developing-data-products/r-markdown.html}{Assista esse vídeo antes de começar}
+
+\subsection{Introdução ao R Markdown}
+
+O Markdown é uma linguagem de marcação leve, que enfatiza a facilidade de escrever e ler o conteúdo e pode ser facilmente convertida em HTML. Markdown foi inventado por \href{https://en.wikipedia.org/wiki/John_Gruber}{John Gruber} com contribuições significativas de \href{https://en.wikipedia.org/wiki/Aaron_Swartz}{Aaron Swartz}. O R Markdown estende o markdown para incluir os resultados do código \faRProject, incluindo tabelas e visualizações. O pacote rmarkdown pode criar páginas da web, PDFs e apresentações de slides a partir de documentos R Markdown. O verdadeiro poder do R Markdown é a capacidade de interligar código e linguagem natural. Essa abordagem é conhecida como \href{https://en.wikipedia.org/wiki/Literate_programming}{programação alfabetizada.}
+
+\subsection{Markdown: Sintaxe básica}
+Abaixo estão alguns exemplos da sintaxe do Markdown. Você pode encontrar um guia de sintaxe abrangente no \href{http://rmarkdown.rstudio.com/authoring_basics.html}{site do RStudio.}
+
+\subsubsection{Cabeçalhos}
+
+\begin{lstlisting}[language=R]
+# Eu sou enorme!
+## Ainda sou grande
+### Tenho um tamanho razoavel
+\end{lstlisting}
+
+
+\subsubsection{Texto}
+\begin{lstlisting}[]
+It was the best of times, it was the worst of times, it was the age of wisdom, 
+it was the age of foolishness, it was the epoch of belief, it was the epoch of 
+incredulity, it was the season of Light, it was the season of Darkness, it was 
+the spring of hope, it was the winter of despair, we had everything before us, 
+we had nothing before us, we were all going direct to Heaven, we were all going 
+direct the other way – in short, the period was so far like the present period, 
+that some of its noisiest authorities insisted on its being received, for good 
+or for evil, in the superlative degree of comparison only.
+\end{lstlisting}
+
+
+\subsubsection{Negrito e itálico}
+
+\begin{lstlisting}
+*italico*
+**negrito**
+***negrito e italico***
+\end{lstlisting}
+
+\subsubsection{Listas}
+
+Desordenada:
+
+\begin{lstlisting}
+- um item
+- outro item
+- terceiro item
+\end{lstlisting}
+
+Ordenada:
+
+\begin{lstlisting}
+1. um item
+2. outro item
+3. terceiro item
+\end{lstlisting}
+
+\subsubsection{Links}
+
+\begin{lstlisting}
+[JHU's Homepage](http://www.jhu.edu)
+\end{lstlisting}
+
+\subsubsection{Imagens}
+
+\begin{lstlisting}
+![A seagull](https://farm9.staticflickr.com/8221/8259009216_4b4e6f994c_m.jpg)
+\end{lstlisting}
+
+\subsubsection{Citações}
+
+\begin{lstlisting}
+> Good night, Mrs. Calabash, wherever you are.
+\end{lstlisting}
+
+\subsubsection{Códigos}
+
+\begin{lstlisting}
+# Code from Hadley Wickham's purr package
+
+reduce <- function(.x, .f, ..., .init) {
+  .f <- as_function(.f, ...)
+
+  f <- function(x, y) {
+    .f(x, y, ...)
+  }
+
+  Reduce(f, .x, init = .init)
+}
+\end{lstlisting}
+
+\subsubsection{Código no corpo do texto}
+
+\begin{lstlisting}
+Voce pode usar a funcao `c()` para criar um vetor.
+\end{lstlisting}
+
+\subsubsection{Códigos do \faRProject no Markdown}
+
+Se caso você precise utilizar a linguagem do \faRProject, utilize a estrutura do chunk:
+
+\begin{lstlisting}[language=R]
+```{r}
+# Write some R code here!
+x <- rnorm(10)
+x^2
+plot(x)
+```
+\end{lstlisting}
+
+Os resultados da computação $x ^ 2$ e o gráfico produzido pelo gráfico(x) serão exibidos nesse chunk de código R assim que você renderizar esse arquivo R Markdown em uma página da web, PDF ou apresentação. Existem várias opções úteis para personalizar esses blocos de código R que discutiremos em uma seção posterior.
+
+\subsection{Escrevendo e renderizando documentos}
+
+Abra um novo arquivo em um editor de texto sem formatação e tenha seu console \faRProject pronto. Eu recomendo usar o RStudio, pois combina bem um editor de texto sem formatação, um console \faRProject e um navegador de arquivos. Escreva alguma remarcação no seu editor de texto sem formatação ou copie e cole a remarcação \faRProject abaixo:
+
+\begin{lstlisting}
+---
+title: "Simulacao no R"
+author: Brian Caffo
+date: July 28, 2016
+---
+
+## Simulacao simples no R
+
+Bem-vindo ao meu tutorial sobre como fazer simulacoes muito simples em R. Na primeira simulacao que vamos tentar eh lancar uma moeda, o que pode resultar no
+o lance da moeda sobe ou desce. Podemos simular lancando uma moeda
+executando a funcao `lance_uma_moeda()` definida abaixo:
+
+```{r}
+lance_uma_moeda <- function(){
+  sample(c("H", "T"), 1)
+}
+```
+
+## Simulacao 1
+
+Vamos testar o resultado simples da execucao de um lancamento de moeda:
+
+```{r}
+lance_uma_moeda()
+```
+
+## Lance muitas moedas
+
+Em vez de jogar uma moeda de cada vez, podemos definir uma funcao que sera lancar
+um numero especifico de moedas:
+
+```{r}
+lanca_moedas <- function(n){
+  sample(c("H", "T"), n, replace = TRUE)
+}
+```
+
+## Resultados de preenchimento de moedas
+
+Vamos dar uma olhada nos resultados do lancamento de 100 moedas com um grafico de barras:
+
+```{r}
+barplot(table(lanca_moedas(100)))
+```
+\end{lstlisting}
+
+Um recurso do R Markdown que é diferente do Markdown comum é a presença do yaml no início do arquivo. O Yaml é um meio simples para fornecer metadados sobre o documento que você está escrevendo. A front matter do yaml é escrita entre um par de três hífens (---) no início do documento. No arquivo Rmd acima, especifiquei um título, autor e data para este documento, que será colocado no início do documento.
+
+Salve seu documento R Markdown em seu diretório de trabalho atual como fbox{simple\_sim.Rmd}. Para transformar este documento em uma página da Web, instale primeiro o pacote rmarkdown, se você ainda não possui o \fbox{install.packages("rmarkdown")}. Após a instalação do pacote, você pode carregar o pacote rmarkdown com \fbox{library(rmarkdown)}. Você pode renderizar seu R Markdown em uma página da Web digitando \fbox{render("simple\_sim.Rmd")} no console do R. Após a produção do documento HTML, é possível visualizar seu novo documento digitando \fbox{browseURL("simple\_sim.html")} no console do R. Parabéns por criar seu primeiro produto de dados!
+
+Se você deseja criar um PDF em vez de um documento HTML, precisará fornecer argumentos diferentes para a função \fbox{render()}. Digite \fbox{render ("simple\_sim.Rmd", output\_format = pdf\_document())} no console do R para criar um PDF.
+
+Existem várias vantagens e desvantagens entre a distribuição de documentos HTML ou PDF. O HTML permite que seu produto de dados seja distribuído como um site que permite incorporar visualizações interativas, algumas das quais falaremos sobre a criação em um capítulo posterior. Os documentos PDF são mais independentes em comparação com o HTML, embora sejam documentos estáticos - eles não respondem como uma página da Web. Em geral, se você quiser que outros desenvolvam seu produto de dados
+
+\subsection{Criando apresentações no R Markdown}
+
+Além de criar páginas da web e PDFs a partir do R Markdown, você também pode criar apresentações de slides. Use o documento R Markdown da seção anterior e insira
+
+\fbox{render("simple\_sim.Rmd", output\_format = ioslides\_presentation())} no console do R. Agora abra o deck de slides com \fbox{browseURL("simple\_sim.html")}. Como você pode ver, ainda é uma página da web, exceto que o documento foi renderizado como um slide slide!
+
+Cada slide é demarcado no seu arquivo de remarcação R com dois sinais de sustenido ##, seguidos pelo título do slide. Os campos especificados na matéria frontal do yaml criam o primeiro slide. Se você preferir produzir slides em PDF, insira \fbox{render ("simple\_sim.Rmd", output\_format = beamer\_presentation())} no console do \faRProject para criar slides em PDF com a estrutura do $\LaTeX$ Beamer.
+
+\subsection{Compartilhando documentos em R Markdown}
+
+Recomendamos os seguintes sites para compartilhar os arquivos HTML que você produz a partir de documentos R Markdown. Se você usou o The Data Scientist's Toolbox, deve conhecer as páginas do GitHub. Se você conhece o Git e não o usou antes da documentação deles para criar um site, é muito simples. Se você não estiver familiarizado com o Git e estiver usando o RStudio, aproveite os RPubs, que talvez sejam a maneira mais fácil de compartilhar um documento HTML do RStudio. Você pode encontrar instruções simples para usar RPubs aqui. Se você estiver procurando um site que hospede qualquer arquivo HTML gratuitamente, incluindo arquivos HTML gerados pelo R Markdown, consulte o NeoCities.
+
+
+\subsection{Considerações finais}
+
+Com o R Markdown, você pode entrelaçar código de várias linguagens de programação, incluindo R, com texto, tabelas e gráficos. A partir da origem de um arquivo Rmd, você pode produzir vários tipos diferentes de produtos de dados, incluindo sites, PDFs e até e-books. Para mais informações sobre o R Markdown, recomendamos que você visite \href{http://rmarkdown.rstudio.com/}{http://rmarkdown.rstudio.com/}.
+
+\section{Shiny}
+
+\href{https://seankross.com/developing-data-products/shiny.html}{Assista a este vídeo antes de começar}
+
+Shiny é um milagre da programação moderna e ajuda a tornar o \faRProject uma das linguagens mais competitivas para a comunicação de informações a partir de dados. O Shiny é desenvolvido pelo RStudio e é descrito como "Uma estrutura de aplicativos da web para R". Diferentemente das estruturas de aplicativos da Web em muitos outros idiomas, o tempo necessário para escrever um aplicativo Shiny bonito, funcional e pronto para dispositivos móveis é realmente mínimo, o que o torna ideal para prototipagem rápida e implantação fácil. O pessoal do RStudio tem o seguinte argumento: \textit{“Transforme suas análises em aplicativos interativos da Web. Não é necessário conhecimento de HTML, CSS ou JavaScript”}. Essa afirmação é principalmente verdadeira, embora um pouco de conhecimento em HTML seja útil para entender alguns dos conceitos. Se você estiver interessado em aprender mais sobre HTML, CSS e Javascript, recomendamos qualquer um dos seguintes recursos:
+
+\begin{itemize}
+\item \href{https://developer.mozilla.org/en-US/docs/Web/Tutorials}{Mozilla Developer Network Tutorials}
+\item \href{https://www.khanacademy.org/computing/computer-programming/html-css}{HTML & CSS do Khan Academy}
+\item \href{https://www.freecodecamp.com/}{Tutoriais do Free Code Camp}
+\end{itemize}
+
+Continuaremos como se o seu conhecimento em HTML fosse muito básico e não fosse mais avançado do que entender níveis ou fontes de cabeçalho.
+
+\subsection{Instalando o Shiny}
+
+Primeiro, verifique se você tem a versão mais recente do R instalada. Se estiver no Windows, verifique se você tem o Rtools instalado. Em seguida, você pode instalar o Shiny com
+
+\begin{lstlisting}[language=R]
+install.packages("shiny")
+libray(shiny)
+\end{lstlisting}
+
+\subsection{O seu primeiro ShinyApp}
+
+Vamos criar nosso primeiro aplicativo. Como muitos projetos deste livro, começaremos com um aplicativo de exemplo simples. Primeiro, crie um novo diretório onde você pode armazenar todos os arquivos associados ao seu aplicativo. Gosto de organizar meu aplicativo Shiny em dois arquivos separados: ui.R, que contém todos os elementos da interface do usuário, e server.R, que contém a lógica do aplicativo, incluindo o código para carregar e manipular dados. Você pode encontrar o código para cada um desses arquivos abaixo:
+
+\begin{lstlisting}[language=R,caption=ui.R App 1]
+library(shiny)
+
+fluidPage(
+  titlePanel("Data science FTW!"),
+  sidebarLayout(
+    sidebarPanel(
+      h3("Texto da barra lateral")
+    ),
+    mainPanel(
+      h3("Texto do meio do painel")
+    )
+  )
+)
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,caption=server.R App 1]
+library(shiny)
+
+function(input, output){
+  
+}
+\end{lstlisting}
+
+Este aplicativo é extremamente mínimo, apenas para lhe familiarizar com a sintaxe de aplicativos Shiny, incluindo a natureza aninhada dos elementos da interface do usuário. Crie esses dois arquivos dentro do seu novo diretório e altere seu diretório de trabalho atual para essa pasta usando \fbox{setwd()}. Após carregar shiny com o library(shiny), insira runApp() no console do R para iniciar o aplicativo. Como alternativa, você pode fornecer o caminho para o diretório que contém os arquivos ui.R e server.R como um argumento para \fbox{runApp()}. Seu aplicativo deve ser algo como isto:
+
+
+
+\includegraphics[width=14cm,height=5cm]{primeiroapp.png}
+
+\caption{\textbf{Seu primeiro Shiny app}}
+
+\vspace{.5cm}
+Vamos compreender o código em ui.R. 
+
+A função \fbox{fluidPage()} especifica um tipo de interface do usuário para o Shiny exibir. As fluidPages tentam se reorganizar de maneira inteligente, dependendo do tamanho da tela que está exibindo o aplicativo, o que torna esse layout melhor em dispositivos móveis. Em vez de um \fbox{fluidPage()}, você pode usar um \fbox{fixedPage()} que não redimensionará seu aplicativo. A função \fbox{titlePanel()} define um título na parte superior da página e a função \fbox{sidebarLayout()} define o layout de tudo abaixo do painel de título. O \fbox{sidebarLayout()} divide a página em uma barra lateral e em uma parte principal da página, que são especificadas com a função \fbox{sidebarPanel()} e a função \fbox{mainPanel()}, respectivamente. Dentro do \fbox{sidebarPanel()} e do \fbox{mainPanel()}, coloquei um cabeçalho \fbox{h3()}, que apenas exibe algum texto e é o mesmo que especificar uma tag $<$h3$>$ em HTML.
+
+\begin{lstlisting}[language=HTML,caption=Shiny codificado em HTML]
+<div class="container-fluid">
+  <h2>Data science FTW!</h2>
+  <div class="row">
+    <div class="col-sm-4">
+      <form class="well">
+        <h3>Sidebar Text</h3>
+      </form>
+    </div>
+    <div class="col-sm-8">
+      <h3>Main Panel Text</h3>
+    </div>
+  </div>
+</div>
+
+\end{lstlisting}
+
+
+
+\subsection{Mais elementos UI}
+
+Vamos dar uma olhada em outro aplicativo simples com uma interface um pouco mais complexa:
+
+\begin{lstlisting}[language=R,caption=App 2: ui.R App 2]
+library(shiny)
+
+fluidPage(
+  titlePanel("Tags HTML"),
+  sidebarLayout(
+    sidebarPanel(
+      h1("H1 Texto"),
+      h3("H3 Texto"),
+      em("Texto enfatizado")
+    ),
+    mainPanel(
+      h3("Texto do painel central"),
+      code("Código!")
+    )
+  )
+)
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,caption=server.R App 2]
+library(shiny)
+
+function(input, output){
+  
+}
+\end{lstlisting}
+
+
+Este código produz o seguinte app:
+
+
+
+\includegraphics[width=14cm,height=5cm]{segundoapp.png}
+
+\caption{\textbf{Segundo Shiny App}}
+
+\vspace{.5cm}
+
+Neste exemplo, adicionamos alguns elementos da interface do usuário e você pode ver como eles são renderizados no aplicativo. As funções \fbox{h1()} e \fbox{h3()} especificam cabeçalhos, a função \fbox{em()} coloca o texto em itálico e a função \fbox{code()} renderiza o texto com uma fonte monoespaçada para parecer com código de computador. Você pode encontrar uma lista de todas as diferentes marcas de texto da interface do usuário disponíveis, digitando \fbox{?Builder} no console do \faRProject.
+
+\subsection{Inputs e Outputs}
+
+Agora que você conhece o básico da interface do usuário do Shiny, pode começar a aprender como fazer com que seus aplicativos Shiny façam algo útil! O recurso mais importante de um aplicativo Web é que um usuário pode fornecer entradas interagindo com seu aplicativo e, em seguida, você pode mostrar as saídas do usuário que respondem a essas entradas. Vamos começar com o seguinte aplicativo simples e Shiny:
+
+\begin{lstlisting}[language=R,caption=ui.R App 3]
+library(shiny)
+
+fluidPage(
+  titlePanel("Slider App"),
+  sidebarLayout(
+    sidebarPanel(
+      h1("Mova o Slider!"),
+      sliderInput("slider1", "Slide Me!", 0, 100, 0)
+    ),
+    mainPanel(
+      h3("Valor do slider:"),
+      textOutput("texto")
+    )
+  )
+)
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,caption=server.R App 3]
+library(shiny)
+
+function(input, output){
+  output$text <- renderText(input$slider1)
+}
+\end{lstlisting}
+
+O código acima produzirá um aplicativo parecido com este:
+
+
+\includegraphics[width=10cm,height=5cm]{terceiroapp.png}
+
+\caption{\textbf{Terceiro Shiny App}}
+
+\vspace{.5cm}
+
+Uma captura de tela deste aplicativo não faz justiça. Certifique-se de executá-lo no seu próprio computador! Você pode fazer isso facilmente inserindo o seguinte no console do \faRProject:
+
+\begin{lstlisting}[language=R,caption=Chamando Shiny Apps do Sean Kross localmente]
+shiny::runGitHub("seankross/developing-data-products", subdir = "assets/shinyapps/app3/")
+\end{lstlisting}
+
+Tente deslizar o controle deslizante (sldier) para frente e para trás. O número exibido na página deve mudar para refletir o valor do controle deslizante. No ui.R, a única nova função é \fbox{sliderInput()}, que define o elemento da interface do usuário do slider na página. Essa função utiliza vários argumentos, incluindo um identificador exclusivo para esse controle deslizante ("slider1" neste caso), o texto a ser exibido acima do controle deslizante e, finalmente, os valores mínimos, máximos e iniciais para o controle deslizante.
+
+A segunda nova função na interface do usuário é \fbox{textOutput()}. Esta função renderiza o texto que é calculado em server.R. O único argumento passado para essa função é uma sequência com o ID do texto especificado em server.R. Designaremos um ID simples chamado "texto" que usaremos posteriormente no server.R.
+
+Este aplicativo é o primeiro que mostrei que tem algo notável acontecendo no server.R. O arquivo server.R deve retornar uma função; portanto, para aplicativos simples, é apropriado definir uma função anônima, como fizemos neste exemplo. Esta função deve ter argumentos denominados input e output. Você deve pensar nos valores desses argumentos dentro do servidor como uma \fbox{list()} que cada um nomeou elementos que você pode consultar (no caso de \fbox{input}) e atribuir valores (no caso de \fbox{output}). Neste exemplo, estamos recuperando o valor do controle deslizante da entrada de acordo com o identificador que atribuímos a ele em ui.R ("slider1"). A expressão \fbox{input\$slider1} é avaliada como o valor atual do slider. Em seguida, agrupamos essa expressão com a função \fbox{renderText()} que renderiza um valor para que possa ser impressa como texto em um aplicativo Shiny. O valor renderizado é então armazenado na lista de \fbox{output} no elemento de \fbox{text}. A interface do usuário do aplicativo pode recuperar esse valor, uma vez que especificamos o ID do texto em ui.R, e o valor do controle deslizante é exibido na tela.
+
+Se você entende como o aplicativo descrito acima está funcionando, entende as entradas e saídas básicas no Shiny! No lado do servidor de um aplicativo Shiny, você costuma escrever código que recebe entradas da interface do usuário, faz algumas computações e deve renderizar o resultado dessa computação para mostrá-lo ao usuário. Geralmente você pode fazer isso com a família de funções renderizadas incluída no Shiny. No próximo aplicativo, mostraremos uma plotagem para o usuário com base em algumas entradas, eventualmente usando a função \fbox{renderPlot()}.
+
+
+\begin{lstlisting}[language=R,caption=ui.R App 4]
+library(shiny)
+
+fluidPage(
+  titlePanel("Plota Numeros Aleatorios"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("num_pontos", "Quantos numeros aleatorios deseja plotar ?", 
+                   value = 1000, min = 1, max = 1000, step = 1),
+      sliderInput("sliderX", "Seleciona os valores minimos e maximos para X",
+                  -100, 100, value = c(-50, 50)),
+      sliderInput("sliderY", "Seleciona o valor minimo e maximo para Y",
+                  -100, 100, value = c(-50, 50)),
+      checkboxInput("mostra_eixox", "Mostra/Esconde X Nome do eixo", value = TRUE),
+      checkboxInput("mostra_eixoy", "Mostra/Esconde Y Nome do eixo", value = TRUE),
+      checkboxInput("mostra_titulo", "Mostra/Esconde Titulo")
+    ),
+    
+    mainPanel(
+      h3("Grafico de numeros aleatorios"),
+      plotOutput("plot1")
+    )
+  )
+)
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,caption=server.R App 4]
+library(shiny)
+
+function(input, output) {
+  output$plot1 <- renderPlot({
+    set.seed(2016-12-13)
+    
+    dataX <- runif(input$num_pontos, input$sliderX[1], input$sliderX[2])
+    dataY <- runif(input$num_pontos, input$sliderY[1], input$sliderY[2])
+    
+    xlab <- ifelse(input$mostra_eixox, "Eixo X", "")
+    ylab <- ifelse(input$mostra_eixoy, "Eixo Y", "")
+    main <- ifelse(input$mostra_titulo, "Titulo", "")
+    
+    plot(dataX, dataY, xlab = xlab, ylab = ylab, main = main,
+         xlim = c(-100, 100), ylim = c(-100, 100))
+  })
+}
+\end{lstlisting}
+
+Este código gera um resultado como este:
+
+
+\includegraphics[width=17cm,height=10cm]{quartoapp.png}
+
+\caption{\textbf{Quarto Shiny App}}
+
+Você pode rodar esse app localmente compilando a seguinte linha:
+
+\begin{lstlisting}[language=R]
+shiny::runGitHub("seankross/developing-data-products", subdir = "assets/shinyapps/app4/")
+\end{lstlisting}
+
+Este aplicativo tem mais código do que qualquer um dos aplicativos que criamos antes, mas é apenas uma extensão das mesmas idéias de que falamos. No ui.R existem algumas novas funções. A função \fbox{numericInput()} permite que os usuários digitem um número em uma caixa de texto. Você já viu a função \fbox{sliderInput()}, mas neste caso existem dois valores iniciais, o que permite ao usuário selecionar um intervalo de valores em um controle deslizante entre um valor mínimo e máximo. Em seguida, há a função \fbox{checkboxInput()} que cria uma caixa de seleção na página que o usuário pode alternar. Finalmente, a função \fbox{plotOutput()} exibe um gráfico que é renderizado em server.R.
+
+Toda a ação neste arquivo server.R ocorre em uma expressão passada para \fbox{renderPlot()}, pois uma plotagem é a única saída desse aplicativo. O número de números aleatórios a serem gerados é recuperado da entrada \fbox{\$num\_pontos} e cada controle deslizante retorna um vetor numérico de comprimento dois, com o primeiro elemento como o valor do controle deslizante mais à esquerda e o segundo elemento como o valor do controle deslizante mais à direita. O título do eixo é ativado e desativado pela entrada \fbox{\$mostra\_titulo}, que é TRUE se a caixa de seleção estiver marcada e FALSE caso contrário. O mesmo princípio se aplica aos rótulos dos eixos. Finalmente, o gráfico é construído com uma função regular \fbox{plot()} usando entradas da interface do usuário como parâmetros.
+
+\subsection{UI dinâmica}
+
+Convém alterar como a interface do usuário do seu aplicativo Shiny é exibida, dependendo de outras entradas da interface do usuário no seu aplicativo. Esse é um padrão comum visto em formulários on-line, onde sua escolha na parte inicial de um formulário restringe as opções em potencial nas partes posteriores do formulário. Aqui está um pequeno aplicativo que ilustra como alterar dinamicamente a interface do usuário no Shiny:
+
+
+\begin{lstlisting}[language=R,caption=ui.R App 5]
+library(shiny)
+
+fluidPage(
+  titlePanel("UI Dinamica"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("pais", "Em que pais voce vive?", 
+                  choices = c("EUA", "Canada")),
+      uiOutput("regiao")
+    ),
+    
+    mainPanel(
+      textOutput("mensagem")
+    )
+  )
+)
+
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=R,caption=server.R App 5]
+library(shiny)
+library(minimap)
+
+function(input, output) {
+  output$region <- renderUI({
+    if(input$pais == "EUA"){
+      selectInput("estado", "Em que estado voce vive?", choices = usa_abb)
+    } else {
+      selectInput("pt", "Em qual cidade ou territorio voce vive?", choices = canada_abb)
+    }
+  })
+  
+  output$mensagem <- renderText({
+    if(input$country == "EUA"){
+      paste0("Voce mora nos EUA no estado de ", input$estado, ".")
+    } else {
+      paste0("Voce mora no Canada na provincia/estado de ", input$pt, ".")
+    }
+    
+  })
+}
+
+\end{lstlisting}
+
+Esse código irá produzir o seguinte app:
+
+
+\includegraphics[width=14cm,height=8cm]{quintoapp.png}
+
+\caption{\textbf{Escolha a região}}
+
+Lembrando que você pode rodar ele localmente chamando:
+
+\begin{lstlisting}[language=R]
+shiny::runGitHub("seankross/developing-data-products", subdir = "assets/shinyapps/app5/")
+\end{lstlisting}
+
+O ui.R neste aplicativo contém elementos que já vimos antes, exceto a função \fbox{uiOutput()}. Esta função exibe a interface do usuário que é calculada dentro do server.R! Dentro do server.R, dê uma olhada na função \fbox{renderUI()}, que contém o código que você normalmente veria dentro do ui.R. A instrução \fbox{if} determina qual \fbox{selectInput()} é exibido, nos estados dos EUA ou nas províncias e territórios do Canadá. A manipulação dinâmica da interface do usuário pode ser uma ferramenta poderosa para controlar o uso e o fluxo do seu aplicativo.
+
+\subsection{Reatividade}
+
+\begin{lstlisting}[language=R, caption=ui.R App 6]
+library(shiny)
+
+fluidPage(
+  titlePanel("Prever os cavalos de potência"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("sliderMPG", "Quantas km/litro o carro faz?", 10, 35, value = 20),
+      checkboxInput("showModel1", "Show/Hide Model 1", value = TRUE),
+      checkboxInput("showModel2", "Show/Hide Model 2", value = TRUE)
+    ),
+    
+    mainPanel(
+      plotOutput("plot1"),
+      h3("Cavalos de potencia previstos do Modelo 1:"),
+      textOutput("pred1"),
+      h3("Cavalos de potencias previstos do Model 2:"),
+      textOutput("pred2")
+    )
+  )
+)
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,caption=server.R App 6]
+library(shiny)
+
+function(input, output) {
+  # Create Spline
+  mtcars$mpgsp <- ifelse(mtcars$mpg - 20 > 0, mtcars$mpg - 20, 0)
+  
+  # Ajuste de modelos
+  model1 <- lm(hp ~ mpg, data = mtcars)
+  model2 <- lm(hp ~ mpgsp + mpg, data = mtcars)
+  
+  model1pred <- reactive({
+    mpgInput <- input$sliderMPG
+    predict(model1, newdata = data.frame(mpg = mpgInput))
+  })
+  
+  model2pred <- reactive({
+    mpgInput <- input$sliderMPG
+    predict(model2, newdata = 
+              data.frame(mpg = mpgInput,
+                         mpgsp = ifelse(mpgInput - 20 > 0,
+                                        mpgInput - 20, 0)))
+  })
+  
+  output$plot1 <- renderPlot({
+    mpgInput <- input$sliderMPG
+    
+    plot(mtcars$mpg, mtcars$hp, xlab = "Miles Per Gallon", 
+         ylab = "Horsepower", bty = "n", pch = 16,
+         xlim = c(10, 35), ylim = c(50, 350))
+    if(input$showModel1){
+      abline(model1, col = "red", lwd = 2)
+    }
+    if(input$showModel2){
+      model2lines <- predict(model2, newdata = data.frame(
+        mpg = 10:35, mpgsp = ifelse(10:35 - 20 > 0, 10:35 - 20, 0)
+      ))
+      lines(10:35, model2lines, col = "blue", lwd = 2)
+    }
+    legend(25, 250, c("Model 1 Previsão", "Model 2 Previsão"), pch = 16, 
+           col = c("red", "blue"), bty = "n", cex = 1.2)
+    points(mpgInput, model1pred(), col = "red", pch = 16, cex = 2)
+    points(mpgInput, model2pred(), col = "blue", pch = 16, cex = 2)
+  })
+  
+  output$pred1 <- renderText({
+    model1pred()
+  })
+  
+  output$pred2 <- renderText({
+    model2pred()
+  })
+}
+
+\end{lstlisting}
+
+O código gera o seguinte resultado:
+
+\includegraphics[width=14cm,height=8cm]{sextoapp.png}
+
+
+\caption{\textbf{Modelando a base de dados cars}}
+
+
+Rode localmente com os comandos:
+
+\begin{lstlisting}
+shiny::runGitHub("seankross/developing-data-products", subdir = "assets/shinyapps/app6/")
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,caption=ui.R app 7]
+library(shiny)
+
+fluidPage(
+  titlePanel("Previsao dos cavalos de potencia"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("sliderMPG", "Quantos km/litro o carro faz?", 10, 35, value = 20),
+      checkboxInput("showModel1", "Show/Hide Model 1", value = TRUE),
+      checkboxInput("showModel2", "Show/Hide Model 2", value = TRUE),
+      submitButton("Submit")
+    ),
+    
+    mainPanel(
+      plotOutput("plot1"),
+      h3("Cavalos de potencia previstos Modelo 1:"),
+      textOutput("pred1"),
+      h3("Cavalos de potencia previstos Modelo 2:"),
+      textOutput("pred2")
+    )
+  )
+)
+
+\end{lstlisting}
+
+
+\includegraphics[width=16cm,height=8cm]{setimoapp.png}
+
+
+
+Você pode rodar localmente:
+\begin{lstlisting}
+shiny::runGitHub("seankross/developing-data-products", subdir = "assets/shinyapps/app7/")
+\end{lstlisting}
+
+\subsection{Interatividade}
+
+\begin{lstlisting}[language=R, caption=ui.R App 8]
+library(shiny)
+
+fluidPage(
+  titlePanel("Modelo de visualização nuvem de pontos"),
+  sidebarLayout(
+    sidebarPanel(
+      h3("Slope"),
+      textOutput("slopeOut"),
+      h3("Intercept"),
+      textOutput("intOut")
+    ),
+    mainPanel(
+      plotOutput("plot1", brush = brushOpts(
+        id = "brush1"
+      ))
+    )
+  )
+)
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=R,caption=server.R App 8]
+library(shiny)
+
+function(input, output) {
+  model <- reactive({
+    brushed_data <- brushedPoints(trees, input$brush1,
+                                  xvar = "Girth", yvar = "Volume")
+    if(nrow(brushed_data) < 2){
+      return(NULL)
+    }
+    lm(Volume ~ Girth, data = brushed_data)
+  })
+  
+  output$slopeOut <- renderText({
+    if(is.null(model())){
+      "No Model Found"
+    } else {
+      model()[[1]][2]
+    }
+  })
+  
+  output$intOut <- renderText({
+    if(is.null(model())){
+      "No Model Found"
+    } else {
+      model()[[1]][1]
+    }
+  })
+  
+  output$plot1 <- renderPlot({
+    plot(trees$Girth, trees$Volume, xlab = "Girth",
+         ylab = "Volume", main = "Tree Measurements",
+         cex = 1.5, pch = 16, bty = "n")
+    if(!is.null(model())){
+      abline(model(), col = "blue", lwd = 2)
+    }
+  })
+}
+
+\end{lstlisting}
+
+Esse código produz um app como esse:
+
+\includegraphics[width=15cm,height=6cm]{oitavoapp.png}
+
+\caption{\textbf{Nuvem de pontos}}
+
+Você pode rodar isso localmente com:
+
+\begin{lstlisting}
+shiny::runGitHub("seankross/developing-data-products", subdir = "assets/shinyapps/app8/")
+\end{lstlisting}
+
+\subsection{Compartilhando Apps}
+
+\subsection{Conclusão}
+
+Se é como a maioria dos usuários \faRProject quando encontra o Shiny pela primeira vez, provavelmente está se perguntando "O que está acontecendo? Por que o sintaxe é tão estranha? ” Para se acostumar com a programação de aplicativos Shiny, você precisa jogar um pouco do seu pensamento sobre o \faRProject; é um estilo diferente de programação.
+
+Vamos analisar o que está acontecendo com nossos dois arquivos para tornar as coisas mais claras. A função ui.R está controlando a interface. A função shinyUI está alertando o \faRProject para isso. A função interna, fluidPage, diz ao shinyUI que tipo de página criar. Nesse caso, é uma página que pode se reorganizar com base no que você inclui na interface do usuário e se reorganizar para que o aplicativo seja fácil de usar nas telas de dispositivos móveis. Você especifica todos os elementos da página usando funções. Nesse caso, queremos um título titlePanel("Data science FTW!"). Então queremos que o sidebarPanel contenha certos elementos. Portanto, a função sidebarPanel recebe argumentos (novamente funções) de seus elementos. A instrução h3 ('Sidebar text') está dizendo que queremos o texto Siderbar na barra lateral (já que essa função ocorre dentro da função sidebarPanel) e queremos que ela esteja no tamanho da fonte h3. Se você souber um pouco de html, reconhecerá h3 como o tamanho da fonte do terceiro nível de cabeçalho. Semelhante à função sidebarPanel, a função mainPanel utiliza argumentos funcionais para o painel principal.
+
+Provavelmente, o erro de sintaxe mais frequente para o Shiny não é colocar vírgulas nos lugares certos da ui.R. Lembre-se de que os elementos da página são inseridos como argumentos, portanto, eles precisam de vírgulas, como todos os argumentos para as funções \faRProject.
+
+O arquivo server.R é um pouco mais fácil. A função shinyServer diz ao \faRProject que está lidando com um servidor Shiny. A função do servidor sempre aceita um argumento de uma função anônima com entradas e saídas de argumentos. Nesse caso, nossa função não faz nada.
+
+\subsection{Estilo e marcação}
+
+Talvez a maneira mais fácil de ilustrar a marcação seja através de um exemplo. Enquanto mantém o arquivo server.R o mesmo, altere o arquivo ui.R para o seguinte:
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} ~ shinyUI(pageWithSidebar( headerPanel(“Illustrating markup”), sidebarPanel( h1(‘Sidebar panel’), h1(‘H1 text’), h2(‘H2 Text’), h3(‘H3 Text’), h4(‘H4 Text’)
+
+), mainPanel( h3(‘Main Panel text’), code(‘some code’), p(‘some ordinary text’) ) )) ~
+\end{lstlisting}
+
+\subsection{Diferentes tipos de inputs}
+
+O Shiny permite muitos tipos diferentes de inputs. No exemplo a seguir, alteramos o ui.R para permitir alguns tipos de entrada diferentes. Depois de pegar o jeito, qualquer novidade será fácil. Deixamos server.R como está, para que nossas entradas não façam nada. Veja abaixo a entrada numérica, caixa de seleção e entrada de data.
+
+\begin{lstlisting}[language=R]
+{lang=r,line-numbers=off} ~ shinyUI(pageWithSidebar( headerPanel(“Illustrating inputs”), sidebarPanel( numericInput(‘id1’, ‘Numeric input, labeled id1’, 0, min = 0, max = 10, step = 1), checkboxGroupInput(“id2”, “Checkbox”, c(“Value 1” = “1”, “Value 2” = “2”, “Value 3” = “3”)), dateInput(“date”, “Date:”)
+), mainPanel(
+
+) )) ~
+\end{lstlisting}
+
+
+Execute isso para ver os inputs. Eles também são mostrados na próxima imagem alguns parágrafos abaixo.
+
+Consulte esta lição no tutorial do site do Shiny para obter uma lista completa de inputs disponíveis. Depois de pegar o jeito de um ou dois deles, o restante será fácil. Portanto, faça o exemplo acima primeiro e depois tente alguns dos outros.
+
+No momento, nada é feito com nossas entradas. Vamos ver se conseguimos descobrir como, pelo menos, colocá-los no server.R.
+
+\subsection{Fazendo seu site ficar interativo}
+
+Agora que já sabemos um pouco sobre como criar uma interface de usuário Shiny, vamos tornar o server.R reativo às entradas da ui.R. Primeiro, vamos adaptar nosso arquivo ui.R simples anterior para ilustrar. Pegue o último exemplo, onde coletamos uma entrada numérica, caixa de seleção e data e substituímos a função mainPanel por abaixo.
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} mainPanel( h3(‘Illustrating outputs’), h4(‘You entered’), verbatimTextOutput(“oid1”), h4(‘You entered’), verbatimTextOutput(“oid2”), h4(‘You entered’), verbatimTextOutput(“odate”) )
+\end{lstlisting}
+
+Nosso objetivo é fazer com que nosso sidebarPanel colete as entradas e nosso painel principal as exiba. As variáveis oid1, oid2 e odate são todas variáveis de resultado que definimos em nossa função server.R. Aqui está:
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} ~ shinyServer( function(input, output) { output oid1 = renderPrint({input id1}) output oid2 = renderPrint({input id2}) output odate = renderPrint({input date}) } ) ~
+\end{lstlisting}
+
+Portanto, nossa função recebe o input\$id1 e imprime oid1. Observe que id1 foi o nome dado à nossa entrada numérica em nossa função ui.R. Isso está incorreto na input\$id1. O rótulo id2 foi fornecido aos dados da caixa de seleção em ui.R e seu valor está incorreto na input\$id2. Da mesma forma, date foi o rótulo fornecido para a data de entrada e é armazenado na input\$date.
+
+É importante no server.R quebrar a forma como pensamos sobre os programas R sendo executados linearmente. Em vez disso, pense nas funções sendo executadas reativamente para alterar a entrada da função ui.R. A função renderPrint pega a entrada reativa e a atribui à variável de saída. Observe a sintaxe peculiar para renderPrint nas ({R Statements}).
+
+Nesse caso, nossa função server.R está apenas recebendo nossos dados inseridos e retornando-os de volta. Nomeamos nossas variáveis de saída oid1, oid2 e odate, os mesmos nomes usados em ui.R. A instrução renderPrint diz que está sendo enviada de volta ao ui.R para exibição formatada.
+
+
+\subsection{Colocando tudo junto}
+
+Agora vamos criar nosso algoritmo de previsão. Para os arquivos ui.R, vamos tentar:
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} ~ shinyUI( pageWithSidebar( # Application title headerPanel(“Diabetes prediction”),
+\end{lstlisting}
+
+\begin{lstlisting}[language=R]
+sidebarPanel(
+  numericInput('glucose', 'Glucose mg/dl', 90, min = 50, max = 200, step = 5),
+  submitButton('Submit')
+),
+mainPanel(
+    h3('Results of prediction'),
+    h4('You entered'),
+    verbatimTextOutput("inputValue"),
+    h4('Which resulted in a prediction of '),
+    verbatimTextOutput("prediction")
+)
+\end{lstlisting}
+
+Portanto, temos um painel da barra lateral que absorve o valor da glicose. O submitButton coloca um botão que aguarda até que o botão seja pressionado para enviar valores para sever.R. Discutiremos mais sobre os botões de envio no próximo capítulo. O painel principal mostra a saída. Observe que verbatimTextOutput é a função usada para exibir a saída de nossas funções server.R.
+
+Nossa função server.R é
+\begin{lstlisting}
+{lang=r,line-numbers=off} ~ diabetesRisk <- function(glucose) glucose / 200
+
+shinyServer( function(input, output) { output inputValue <- renderPrint({input glucose}) output prediction <- renderPrint({diabetesRisk(input glucose)}) } ) ~
+\end{lstlisting}
+
+Observe que nossa função de previsão é definida fora da função shinyServer. A função shinyServer recebe a entrada e repete o nível de glicose de entrada e o risco de diabetes gerado.
+
+\subsection{Outro exemplo}
+
+Uma ótima maneira de usar o Shiny é criar gráficos interativos. Vamos seguir um exemplo simples, exatamente como o que fizemos no capítulo sobre manipulação. O benefício de usar o Shiny sobre manipular é a capacidade de compartilhar o aplicativo amplamente como uma página da web.
+
+Aqui está a nossa função ui.R
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} ~ shinyUI(pageWithSidebar( headerPanel(“Example plot”), sidebarPanel( sliderInput(‘mu’, ‘Guess at the mean’,value = 70, min = 62, max = 74, step = 0.05,) ), mainPanel( plotOutput(‘newHist’) ) )) ~
+\end{lstlisting}
+
+Observe que plotOutput é a função usada para plotar o histograma gerado. Vamos considerar a função server.R.
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} ~ library(UsingR) data(galton)
+
+shinyServer( function(input, output) { output newHist <- renderPlot({  hist(galton child, xlab=‘child height’, col=‘lightblue’,main=‘Histogram’) mu <- input mulines(c(mu,mu),c(0,200),col="red",lwd=5)mse<−mean((galton child - mu)^2) text(63, 150, paste(“mu =”, mu)) text(63, 140, paste(“MSE =”, round(mse, 2))) }) } ) ~
+\end{lstlisting}
+
+Isso mostra como criamos um conjunto de código um tanto elaborado na instrução renderPlot que gera o gráfico. Observe especificamente a linha \fbox{mu $<-$ input\$mu}. Esse é o valor do controle deslizante que usamos para gerar nossa linha horizontal. 
+
+
+\subsection{Compartilhando seu app}
+
+Agora que temos um aplicativo funcional, gostaríamos de compartilhá-lo com o mundo. Você pode simplesmente postar o código e, quaisquer que sejam os arquivos de dados necessários, os usuários poderão usar o runApp para ver o aplicativo. No entanto, é muito melhor exibi-lo como um aplicativo da web independente. Isso requer a execução de um servidor Shiny para hospedar o aplicativo. Em vez de criar e implantar nosso próprio servidor Shiny, contaremos com o serviço shinyapps.io do RStudio. Você pode ir para \href{https://www.shinyapps.io/}{https://www.shinyapps.io/}, onde será mostrado como criar uma conta. Depois de criar a conta, você poderá hospedar seus aplicativos brilhantes lá. Observe que este é um serviço freemium, de modo que, se você deseja hospedar muitos aplicativos e possuir recursos sofisticados, precisará do serviço pago (ou hospedar seu próprio servidor brilhante).
+
+Após fazer o login, você precisará fazer algumas instalações básicas. Primeiro, ferramentas. (Este é um pacote essencial por várias razões.) Portanto, \fbox{install.packages("devtools")} no prompt de comando do R. Isso permitirá que você instale o pacote shinyapps diretamente do github com o comando 
+
+
+\fbox{devtools::install\_github('rstudio/shinyapps')}.
+
+Em seguida, você deve executar algum código que possa copiar do site shinyapps.io. Parece
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} shinyapps::setAccountInfo(name=‘’, token=‘’, secret=‘’)
+\end{lstlisting}
+
+Isso informa ao RStudio como enviar seu código para shinyapps.io e fornece as permissões para isso. Agora, mude para o diretório em que estão os arquivos server.R e ui.R e você pode enviar seu código com:
+
+\begin{lstlisting}
+{lang=r,line-numbers=off} ~ deployApp(appName = “myFirstApp”) ~
+\end{lstlisting}
+
+Certifique-se de que o shinyapps esteja carregado (com a biblioteca (shinyapps)). Se você precisar de um caminho para seus arquivos, coloque-o no argumento para deployApp. O argumento appName parece ser necessário e você deseja assim mesmo para saber qual aplicativo está em shinyapps.io. Se tudo der certo, o aplicativo será iniciado e abrirá uma janela do navegador com um link para ele. No meu caso, o link foi \href{https://bcaffo.shinyapps.io/myFirstApp}{https://bcaffo.shinyapps.io/myFirstApp}.
+
+Você pode gerenciar seu aplicativo no navegador em shinyapps.io. Agora, quando você acessa shinyapps.io e clica em Aplicativos / Todos ou Aplicativos / Em execução, deve ver seu aplicativo.
+
+A partir daqui, você pode iniciar, parar e excluir seu aplicativo. Você também pode fazer isso no seu console \faRProject, com as ferramentas shinapps. Eu recomendaria usar o navegador da Web, pois é um pouco mais fácil, mas se você chegar ao ponto em que está escrevendo muitos aplicativos, provavelmente deseja aprender os comandos do console.
+
+\subsection{Fale sobre o servidor Shiny posteriormente}
+
+É importante distinguir entre um aplicativo Shiny (aplicativo) e um servidor Shiny. É necessário um servidor Shiny para hospedar um aplicativo Shiny para o mundo. Caso contrário, somente aqueles que possuem o Shiny instalado e têm acesso ao seu código poderão executar seu aplicativo da web, o que, em alguns casos, anula o propósito de criar um aplicativo da web em primeiro lugar. Neste livro, não abordaremos a criação de um servidor Shiny, pois isso requer a compreensão de um pouco de administração de servidor Linux. Em vez disso, executaremos nossos aplicativos localmente e usaremos o serviço do RStudio para hospedar aplicativos Shiny (seus servidores) em uma plataforma chamada shinyapps.io.
+
+O RStudio trabalha com o servidor para que você só precise se preocupar com a criação do aplicativo. O Shinyapps.io é gratuito até um ponto em que você só pode executar 5 aplicativos por um determinado período de tempo por mês. Isso será bom para nossos propósitos, mas se você realmente quiser criar aplicativos Shiny, terá que optar por um plano pago ou executar seu próprio servidor.
+
+\section{Leaflet}
+\subsection{Iniciando}
+
+O Leaflet é uma biblioteca Javascript que permite aos usuários criar mapas interativos que até ficam bem em dispositivos móveis. O pessoal maravilhoso do RStudio criou seu próprio pacote Leaflet \faRProject, que permite aos usuários do \faRProject criar seus próprios mapas do Leaflet sem precisar escrever nenhum Javascript. Vamos começar a fazer alguns mapas!
+
+Primeiro você deve instalar o Leaflet:
+
+\begin{lstlisting}
+install.packages("leaflet")
+\end{lstlisting}
+
+Depois de instalar o leaflet, você pode começar a fazer mapas! Você pode armazenar seu mapa em uma variável como qualquer outro valor. Neste exemplo, vamos armazenar nosso mapa em uma variável chamada my\_map. Você precisa usar a função \fbox{addTiles()} para adicionar uma camada base ao seu mapa e pode usar o operador de canal (\%$>$\%) para adicionar recursos sequencialmente ao seu mapa. Veja como você pode criar um mapa básico muito simples:
+
+\begin{lstlisting}[language=R]
+library(leaflet)
+
+my_map <- leaflet() %>%
+  addTiles()
+my_map
+\end{lstlisting}
+
+\includegraphics[width=16cm,height=4cm]{mapa.png}
+
+
+Uau!, é o mundo inteiro! Você poderá mover o mapa e aumentar e diminuir o zoom conforme desejar. Você criou seu primeiro mapa interativo! O leaflet usa dados gratuitos e de código aberto do projeto OpenStreetMap.
+
+Por mais adorável que o mundo seja, você pode especificar um local específico e um nível de zoom se estiver tentando mostrar um local específico no seu mapa. Você pode fazer isso com a função \fbox{setView()} especificando a longitude, latitude e nível de zoom:
+
+\begin{lstlisting}[language=R]
+my_map <- my_map %>%
+  setView(lat = 39.2898036, lng = -76.6051842, zoom = 13)
+my_map
+\end{lstlisting}
+
+
+Olha, é a linda Baltimore, a maior cidade da América!
+
+\subsection{Adicionando marcadores}
+
+Este é certamente um mapa mais interessante do que tínhamos antes, mas ainda falta recursos. Vamos adicionar um marcador a este mapa usando a função \fbox{addMarkers()}:
+
+
+\includegraphics[width=16cm,height=4cm]{mapa2.png}
+
+
+Como você pode ver, você pode adicionar um marcador apenas especificando longitude e latitude. Opcionalmente, você pode adicionar algum texto pop-up que aparece quando você clica no marcador. Você não precisa adicionar um marcador de cada vez. Para criar vários marcadores ao mesmo tempo, use um quadro de dados com colunas denominadas lat e lng para latitude e longitude:
+
+\begin{lstlisting}[language=R]
+suppressWarnings(set.seed(2016-04-25))
+df <- data.frame(lat = runif(20, min = 39.2, max = 39.3),
+                 lng = runif(20, min = -76.6, max = -76.5))
+df %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers()
+\end{lstlisting}
+
+Como você pode ver, você pode usar o operador de tubo para canalizar um quadro de dados diretamente no \fbox{leaflet()}.
+
+O ícone azul “pins/marcadores” padrão que o Leaflet fornece é bom, mas você também pode criar seu próprio ícone com a função \fbox{makeIcon()}. Você precisará fornecer alguns argumentos para essa função, incluindo um link para o URL do seu ícone, além de variáveis de largura e altura. Depois de criar um objeto ícone, você pode usá-lo especificando o argumento icon em \fbox{addmarkers()}:
+
+\begin{lstlisting}[language=R]
+hopkinsIcon <- makeIcon(
+  iconUrl = "http://brand.jhu.edu/content/uploads/2014/06/university.shield.small_.blue_.png",
+  iconWidth = 31*215/230, iconHeight = 31,
+  iconAnchorX = 31*215/230/2, iconAnchorY = 16
+)
+
+hopkinsLatLong <- data.frame(
+  lat = c(39.2973166, 39.3288851, 39.2906617, 39.2970681, 39.2824806),
+  lng = c(-76.5929798, -76.6206598, -76.5469683, -76.6150537, -76.6016766))
+
+hopkinsLatLong %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(icon = hopkinsIcon)
+\end{lstlisting}
+
+\includegraphics[width=16cm,height=4cm]{mapa3.png}
+
+Agora, mapeamos bem todos os locais do campus da Johns Hopkins na cidade de Baltimore. Você pode personalizar pop-ups de texto incluindo qualquer código HTML válido em um vetor. Em seguida, você pode fornecer esse vetor como argumento pop-up em \fbox{addMarkers()} da seguinte maneira:
+
+\begin{lstlisting}
+hopkinsSites <- c(
+  "<a href='http://www.jhsph.edu/'>East Baltimore Campus</a>",
+  "<a href='https://apply.jhu.edu/visit/homewood/'>Homewood Campus</a>",
+  "<a href='http://www.hopkinsmedicine.org/johns_hopkins_bayview/'>Bayview Medical Center</a>",
+  "<a href='http://www.peabody.jhu.edu/'>Peabody Institute</a>",
+  "<a href='http://carey.jhu.edu/'>Carey Business School</a>"
+)
+
+hopkinsLatLong %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(icon = hopkinsIcon, popup = hopkinsSites)
+\end{lstlisting}
+
+
+\includegraphics[width=16cm,height=4cm]{mapa4.png}
+
+
+Cada local do campus da Johns Hopkins agora possui um link para o site do respectivo campus!
+
+\begin{lstlisting}[language=R]
+df <- data.frame(lat = runif(500, min = 39.25, max = 39.35),
+                 lng = runif(500, min = -76.65, max = -76.55))
+df %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(clusterOptions = markerClusterOptions())
+\end{lstlisting}
+
+\includegraphics[width=16cm,height=4cm]{mapa5.png}
+
+\begin{lstlisting}[language=R]
+df <- data.frame(lat = runif(20, min = 39.25, max = 39.35),
+                 lng = runif(20, min = -76.65, max = -76.55))
+df %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers()
+\end{lstlisting}
+
+\includegraphics[width=16cm,height=4cm]{mapa6.png}
+
+
+\subsection{Desenhando}
+
+\begin{lstlisting}[language=R]
+md_cities <- data.frame(name = c("Baltimore", "Frederick", "Rockville", "Gaithersburg", 
+                                 "Bowie", "Hagerstown", "Annapolis", "College Park", "Salisbury", "Laurel"),
+                        pop = c(619493, 66169, 62334, 61045, 55232,
+                                39890, 38880, 30587, 30484, 25346),
+                        lat = c(39.2920592, 39.4143921, 39.0840, 39.1434, 39.0068, 39.6418, 38.9784, 38.9897, 38.3607, 39.0993),
+                        lng = c(-76.6077852, -77.4204875, -77.1528, -77.2014, -76.7791, -77.7200, -76.4922, -76.9378, -75.5994, -76.8483))
+md_cities %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircles(weight = 1, radius = sqrt(md_cities$pop) * 30)
+\end{lstlisting}
+
+\begin{lstlisting}
+## Assumindo que 'lng' e 'lat' sejam longitude e latitude, respectivamente.
+\end{lstlisting}
+
+
+\includegraphics[width=16cm,height=4cm]{mapa7.png}
+
+\begin{lstlisting}[language=R]
+leaflet() %>%
+  addTiles() %>%
+  addRectangles(lat1 = 37.3858, lng1 = -122.0595, 
+                lat2 = 37.3890, lng2 = -122.0625)
+\end{lstlisting}
+
+\includegraphics[width=16cm,height=4cm]{mapa8.png}
+
+\begin{lstlisting}[language=R]
+df <- data.frame(lat = runif(20, min = 39.25, max = 39.35),
+                 lng = runif(20, min = -76.65, max = -76.55),
+                 col = sample(c("red", "blue", "green"), 20, replace = TRUE),
+                 stringsAsFactors = FALSE)
+
+df %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(color = df$col) %>%
+  addLegend(labels = LETTERS[1:3], colors = c("blue", "red", "green"))
+\end{lstlisting}
+
+\subsection{Conclusão}
+
+Para mais detalhes sobre o pacote do leaflet para R, visite \href{http://rstudio.github.io/leaflet/}{http://rstudio.github.io/leaflet/}.
+
+
+
+\newpage
+
+\section{Gráficos interativos}
+
+O \faRProject possui um conjunto cada vez mais diversificado de ferramentas para a criação de gráficos interativos. Você já viu alguns com gadgets do Shiny. Essas ferramentas, no entanto, dependem da execução do \faRProject em segundo plano. Outras ferramentas convertem os gráficos em exibições javascript que podem ser incorporadas em páginas da web e apresentações em html. Veremos uma ótima versão disso mais tarde para mapas com folheto. Uma abordagem relacionada conecta \faRProject a outros sistemas de plotagem bem desenvolvidos que possuem interatividade e outros recursos interessantes, como tipos de plotagem padrão altamente inovadores.
+
+Duas bibliotecas de plotagem bem desenvolvidas são plot.ly e Google Charts. Ambos possuem excelentes ferramentas para criar, adaptar e exibir gráficos interativos na web. Eles também têm recursos complementares para inserir e manipular os dados, como as folhas do Google. No entanto, geralmente é o caso de análises avançadas de dados em \faRProject, com o desejo de enviar visualizações finais para um gráfico do Google ou plot.ly. Este capítulo tem esses casos de uso em mente. Os pacotes \faRProject relevantes são googleVis e plot.ly. No caso de plot.ly, o pacote \faRProject é criado pela empresa que produz o programa gráfico. No entanto, ambos os pacotes são amplos e bem documentados. Abordaremos o googleVis primeiro.
+
+\subsection{googleVis}
+
+Assista a esses vídeos antes de começar: \href{https://www.youtube.com/watch?v=CAtMPcSV1Qk&list=PLpl-gQkQivXjTm0HLZZaNXf1LnlFSSVX4&index=22&t=1s}{parte 1} e \href{https://www.youtube.com/watch?v=rV9IDEE7zYY&index=23&list=PLpl-gQkQivXjTm0HLZZaNXf1LnlFSSVX4}{parte 2}
+
+
+A ideia básica de um gráfico do googleVis é que se use \faRProject para configurar seus dados no formato exigido pelo googleVis, a função googleVis \faRProject cria uma página HTML relevante. A página HTML resultante usa bibliotecas javscript do Google Charts e o resultado é um gráfico HTML interativo.
+
+Obviamente, se você ainda não o fez, instale o googleVis (por exemplo, \fbox{install.packages("googleVis"))}, que só precisa ser feito uma vez e depois carregue a \fbox{library(googleVis)}. O pacote googleVis está excepcionalmente bem documentado. Neste capítulo, basicamente passamos por um tour pelo manual para dar aos usuários um empurrão em alguns pontos de partida simples. Depois de terminar o capítulo, você poderá aproveitar esses exemplos para usar todos os aspectos do googleVis.
+
+Um exemplo simples de criação de um gráfico do Google em \faRProject é dado abaixo. Primeiro, criamos um conjunto de dados simples e depois o plotamos com um gráfico de barras. Vamos criar um conjunto de dados com milhares de seguidores e seguidores do Twitter dos instrutores do Coursera Data Science Specialization. (Observe que as idades são falsas, já que eu não conheço as idades de Jeff ou Roger.)
+
+\begin{lstlisting}[language=R]
+## Cria uma amostra de dados
+df = data.frame(Instrutor=c("Brian", "Roger", "Jef"), 
+                Idade=c(43,39,34), 
+                Twitter=c(7.9,22.4,13.9))
+bar = gvisBarChart(df, xvar="Instrutor", yvar=c("Idade","Twitter"))
+bar
+\end{lstlisting}
+
+\includegraphics[width=14cm,height=4cm]{grafbar.png}
+
+Dados: data • Chart ID: \href{https://seankross.com/developing-data-products/Chart_BarChartID75ce1b491fa9.html}{BarChartID75ce1b491fa9} • \href{https://github.com/mages/googleVis}{googleVis-0.6.2}
+R version 3.3.2 (2016-10-31) • \href{https://developers.google.com/terms/}{Google Terms of Use} • \href{https://google-developers.appspot.com/chart/interactive/docs/gallery/barchart}{Documentation and Data Policy}
+
+Claramente, Brian precisa intensificar seus tweets.
+
+Se você estiver vendo este livro como uma página da Web, observe a interatividade passando o mouse sobre as linhas. Se você estiver executando o código localmente, poderá ter notado que a barra de chamada não criou o gráfico, print (bar) se comportaria de maneira semelhante. Em vez disso, esses comandos imprimem o HTML relevante para o gráfico. É mostrado desta maneira, pois é isso que é necessário para incorporar a plotagem em um documento de remarcação R compilado com knitr. Para mostrar os resultados, use a opção chunk \fbox{results = 'asis'}.
+
+Talvez a maneira mais fácil de visualizar os resultados seja usar o método de plotagem S3 associado aos objetos do googleVis.
+
+\begin{lstlisting}
+plot(Line)
+\end{lstlisting}
+
+Isso criará um arquivo HTML temporário e o abrirá usando um servidor local. A exibição da trama para o mundo exigirá a hospedagem da trama em outro lugar. Uma maneira fácil de fazer isso, como fizemos neste livro, é incorporar os gráficos usando o knitr e hospedar seu documento do knitr, como você costuma fazer. Como alternativa, você pode pegar o código do gráfico e incorporá-lo a qualquer página da Web hospedada criada. Os desenvolvedores anteciparam esse caso de uso e, portanto, os vários utilitários para imprimir o HTML e o javascript. O mais útil é que o método de impressão associado aos objetos do \fbox{googleVis} imprima o código com várias quantidades de preâmbulo HTML. \fbox{?print.gvis} mostra as opções.
+
+\begin{itemize}
+\item Motion charts: \fbox{gvisMotionChart}
+\item Interactive maps: \fbox{gvisGeoChart}
+\item Interactive tables: \fbox{gvisTable}
+\item Line charts: \fbox{gvisLineChart}
+\item Bar charts: \fbox{gvisColumnChart}
+\item Tree maps: \fbox{gvisTreeMap}
+\end{itemize}
+
+A documentação completa pode ser encontrada \href{http://cran.r-project.org/web/packages/googleVis/googleVis.pdf}{aqui}. Abordaremos alguns exemplos e, desses, você poderá facilmente generalizar para os outros abordados no pacote.
+
+Um gráfico geográfico é um mapa interativo. Assim, o \fbox{googleVis} pode corresponder a grande parte da funcionalidade do leaflet. Considere esta plotagem do conjunto de dados Exports. Primeiro, olhe para os dados.
+
+\begin{lstlisting}[language=R]
+head(Exports)
+
+##         Country Profit Online
+## 1       Germany      3   TRUE
+## 2        Brazil      4  FALSE
+## 3 United States      5   TRUE
+## 4        France      4   TRUE
+## 5       Hungary      3  FALSE
+## 6         India      2   TRUE
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=R]
+G = gvisGeoChart(Exports, locationvar="Country",
+                  colorvar="Profit",options=list(width=600, height=400))
+print(G,"chart")
+\end{lstlisting}
+
+
+\includegraphics[width=14cm,height=7cm]{mapa9.png}
+
+
+As opções em um gráfico do googleVis são fornecidas em um formato de lista. Estes estão bem documentados no manual de ajuda de cada função. Os parâmetros devem ser definidos com o valor nomeado na documentação do Google Charts para o gráfico associado. Por exemplo, considere a função gvisGeoChart. As opções podem ser encontradas aqui.
+
+Por exemplo, você pode ampliar o gráfico em uma região específica especificando region = na lista de opções. Considere focar o mapa na Europa. Os códigos de região são fornecidos \href{https://developers.google.com/chart/interactive/docs/gallery/geochart#Continent_Hierarchy}{aqui}.
+
+\begin{lstlisting}[language=R]
+G2 = gvisGeoChart(Exports, locationvar="Country",
+                  colorvar="Profit",options=list(width=600, height=400,region="150"))
+print(G2,"chart")
+\end{lstlisting}
+
+
+\includegraphics[width=12cm,height=6cm]{mapa10.png}
+
+Vamos considerar a configuração de mais opções.
+
+\section{Pacotes}
+
+\href{https://seankross.com/developing-data-products/packages.html}{Assista a esse vídeo antes de continuar.}
+
+
+\section{Objetos}
+
+\href{https://seankross.com/developing-data-products/objects.html}{Assista a esse vídeo antes de continuar.}
+
+\section{Swirl}
+
+\href{https://seankross.com/developing-data-products/swirl.html}{Assista a esse vídeo antes de continuar.}
+
+%======================================================
+\newpage
+%=====================================================
+
+\begin{thebibliography}{99}
+
+\bibitem{overleaf} \textbf{Overleaf, online \LaTeX~ editor}. Disponível em \href{http://www.overleaf.com}{Overleaf.com} 
+
+\bibitem{xie} Xie, Y. \textbf{Dynamic Documents with \faRProject and knitr} 2nd edition, 2015.
+
+\bibitem{JARick} \textbf{Reproducible Research using \faRMarkdown and Overleaf.} Disponível em \href{https://static1.squarespace.com/static/5757268f7da24f26ca7b21d2/t/5c7587114192021796d7cc84/1551206162093/R_Overleaf_Integration.pdf}{Reproducible Research using RMarkdown and Overleaf}
+\end{thebibliography}
+
+
+
+
+
+
+
+
+
+
+%===================================================
+\end{document}
