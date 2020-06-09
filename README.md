@@ -2,6 +2,6 @@
 
 - [Tradução do bookdown](https://seankross.com/developing-data-products/)
 
-![](me.jpg=40x20)
+![](me.jpg)
 
 Use $\LaTeX$ !!!
